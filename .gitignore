@@ -1,0 +1,2 @@
+build/*
+!build/SDL3.dll

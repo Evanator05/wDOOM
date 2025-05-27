@@ -1,0 +1,1 @@
+gcc -std=c99 -Wno-pointer-to-int-cast -Wno-int-to-pointer-cast -o build/wDOOM src/*.c -L"lib/SDL3" -I"include" -lSDL3
