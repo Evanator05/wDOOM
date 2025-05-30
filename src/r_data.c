@@ -462,7 +462,7 @@ void R_InitTextures (void)
     //  TEXTURE1 for shareware, plus TEXTURE2 for commercial.
     maptex = maptex1 = W_CacheLumpName ("TEXTURE1", PU_STATIC);
     numtextures1 = LONG(*maptex);
-    maxoff = W_LumpLength (W_GetNumForName ("TEXTURE1"));
+    maxoff = W_LumpLength(W_GetNumForName ("TEXTURE1"));
     directory = maptex+1;
 	
     if (W_CheckNumForName ("TEXTURE2") != -1)

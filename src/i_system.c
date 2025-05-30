@@ -60,7 +60,6 @@ ticcmd_t*	I_BaseTiccmd(void)
     return &emptycmd;
 }
 
-
 int  I_GetHeapSize (void)
 {
     return mb_used*1024*1024;
@@ -97,8 +96,7 @@ int  I_GetTime (void)
 //
 // I_Init
 //
-void I_Init (void)
-{
+void I_Init(void) {
     I_InitSound();
     //  I_InitGraphics();
 }
@@ -106,25 +104,22 @@ void I_Init (void)
 //
 // I_Quit
 //
-void I_Quit (void)
-{
-    D_QuitNetGame ();
+void I_Quit(void) {
+    D_QuitNetGame();
     I_ShutdownSound();
     I_ShutdownMusic();
-    M_SaveDefaults ();
+    M_SaveDefaults();
     I_ShutdownGraphics();
     exit(0);
 }
 
-byte*	I_AllocLow(int length)
-{
-    byte*	mem;
-        
-    mem = (byte *)malloc (length);
-    memset (mem,0,length);
+byte *I_AllocLow(int length) {
+    byte *mem;
+
+    mem = (byte *)malloc(length);
+    memset(mem, 0, length);
     return mem;
 }
-
 
 //
 // I_Error

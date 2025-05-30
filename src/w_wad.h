@@ -32,33 +32,26 @@
 //
 // TYPES
 //
-typedef struct
-{
-    // Should be "IWAD" or "PWAD".
-    char		identification[4];		
-    int			numlumps;
-    int			infotableofs;
-    
+typedef struct {
+    char identification[4];
+    int numlumps;
+    int infotableofs;
 } wadinfo_t;
 
-
-typedef struct
-{
-    int			filepos;
-    int			size;
-    char		name[8];
-    
+typedef struct {
+    int filepos;
+    int size;
+    char name[8];
 } filelump_t;
 
 //
 // WADFILE I/O related stuff.
 //
-typedef struct
-{
-    char	name[8];
-    int		handle;
-    int		position;
-    int		size;
+typedef struct {
+    int handle;
+    int position;
+    int size;
+    char name[8];
 } lumpinfo_t;
 
 
@@ -78,7 +71,7 @@ void    W_ReadLump (int lump, void *dest);
 void*	W_CacheLumpNum (int lump, int tag);
 void*	W_CacheLumpName (char* name, int tag);
 
-
+void DumpLumpNames(void);
 
 
 #endif

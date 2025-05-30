@@ -83,8 +83,6 @@ static const char rcsid[] = "$Id: d_main.c,v 1.8 1997/02/03 22:45:09 b1 Exp $";
 //  calls I_GetTime, I_StartFrame, and I_StartTic
 //
 void D_DoomLoop (void);
-
-
 char*		wadfiles[MAXWADFILES];
 
 
