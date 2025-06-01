@@ -1071,9 +1071,10 @@ void D_DoomMain(void)
 
 	printf("M_Init: Init miscellaneous info.\n");
 	M_Init();
-
+	
 	printf("R_Init: Init DOOM refresh daemon - ");
 	R_Init();
+	printf("MADE IT AFTER\n");
 
 	printf("\nP_Init: Init Playloop state.\n");
 	P_Init();

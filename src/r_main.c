@@ -611,8 +611,7 @@ void R_InitTextureMapping (void)
 //
 #define DISTMAP		2
 
-void R_InitLightTables (void)
-{
+void R_InitLightTables (void) {
     int		i;
     int		j;
     int		level;
@@ -621,27 +620,23 @@ void R_InitLightTables (void)
     
     // Calculate the light levels to use
     //  for each level / distance combination.
-    for (i=0 ; i< LIGHTLEVELS ; i++)
-    {
-	startmap = ((LIGHTLEVELS-1-i)*2)*NUMCOLORMAPS/LIGHTLEVELS;
-	for (j=0 ; j<MAXLIGHTZ ; j++)
-	{
-	    scale = FixedDiv ((SCREENWIDTH/2*FRACUNIT), (j+1)<<LIGHTZSHIFT);
-	    scale >>= LIGHTSCALESHIFT;
-	    level = startmap - scale/DISTMAP;
-	    
-	    if (level < 0)
-		level = 0;
+    for (i=0 ; i< LIGHTLEVELS ; i++) {
+        startmap = ((LIGHTLEVELS-1-i)*2)*NUMCOLORMAPS/LIGHTLEVELS;
+        for (j=0 ; j<MAXLIGHTZ ; j++) {
+            scale = FixedDiv ((SCREENWIDTH/2*FRACUNIT), (j+1)<<LIGHTZSHIFT);
+            scale >>= LIGHTSCALESHIFT;
+            level = startmap - scale/DISTMAP;
+            
+            if (level < 0)
+                level = 0;
 
-	    if (level >= NUMCOLORMAPS)
-		level = NUMCOLORMAPS-1;
+            if (level >= NUMCOLORMAPS)
+                level = NUMCOLORMAPS-1;
 
-	    zlight[i][j] = colormaps + level*256;
-	}
+            zlight[i][j] = colormaps + level*256;
+        }
     }
 }
-
-
 
 //
 // R_SetViewSize
@@ -653,12 +648,8 @@ boolean		setsizeneeded;
 int		setblocks;
 int		setdetail;
 
-
 void
-R_SetViewSize
-( int		blocks,
-  int		detail )
-{
+R_SetViewSize(int blocks, int detail) {
     setsizeneeded = true;
     setblocks = blocks;
     setdetail = detail;
@@ -760,17 +751,17 @@ void R_ExecuteSetViewSize (void)
     }
 }
 
-
-
 //
 // R_Init
 //
 extern int	detailLevel;
 extern int	screenblocks;
 
-void R_Init(void)
-{
+void R_Init(void) {   
+    
     R_InitData();
+    printf("FINISHED R_INITDATA");
+
     printf("\nR_InitData");
     R_InitPointToAngle();
     printf("\nR_InitPointToAngle");

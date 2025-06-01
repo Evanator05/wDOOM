@@ -331,15 +331,11 @@ int W_CheckNumForName(char* name) {
     // scan backwards so patch lump files take precedence
     lump_p = lumpinfo + numlumps;
 
-    while (lump_p-- != lumpinfo)
-    {
-	if ( *(int *)lump_p->name == v1
-	     && *(int *)&lump_p->name[4] == v2)
-	{
-	    return lump_p - lumpinfo;
-	}
+    while (lump_p-- != lumpinfo) {
+        if ( *(int *)lump_p->name == v1 && *(int *)&lump_p->name[4] == v2) {
+            return lump_p - lumpinfo;
+        }
     }
-
     // TFB. Not found.
     return -1;
 }
