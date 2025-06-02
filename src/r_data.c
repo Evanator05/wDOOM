@@ -61,6 +61,7 @@ rcsid[] = "$Id: r_data.c,v 1.4 1997/02/03 16:47:55 b1 Exp $";
 // into the rectangular texture space using origin
 // and possibly other attributes.
 //
+#pragma pack(push, 1) // set 1-byte alignment
 typedef struct
 {
     short	originx;
@@ -76,20 +77,23 @@ typedef struct
 // A DOOM wall texture is a list of patches
 // which are to be combined in a predefined order.
 //
+
 typedef struct
 {
     char		name[8];
-    int		    masked;	            // used to be boolean but boolean was only 1 byte but we needed 4
+    int		masked;	
     short		width;
     short		height;
-    int		    columndirectory;	// OBSOLETE <-- used to be void ** but new c compiler give that a different size
+    int		columndirectory;	// OBSOLETE
     short		patchcount;
     mappatch_t	patches[1];
 } maptexture_t;
+#pragma pack(pop)
 
 // A single patch from a texture definition,
 //  basically a rectangular area within
 //  the texture rectangle.
+
 typedef struct
 {
     // Block origin (allways UL),
@@ -117,6 +121,7 @@ typedef struct
     texpatch_t	patches[1];		
     
 } texture_t;
+
 
 
 
@@ -175,8 +180,7 @@ lighttable_t	*colormaps;
 // Clip and draw a column
 //  from a patch into a cached post.
 //
-void
-R_DrawColumnInCache (column_t* patch, byte* cache, int originy, int cacheheight) {
+void R_DrawColumnInCache (column_t* patch, byte* cache, int originy, int cacheheight) {
     int		count;
     int		position;
     byte*	source;
@@ -213,7 +217,7 @@ R_DrawColumnInCache (column_t* patch, byte* cache, int originy, int cacheheight)
 //  the composite texture is created from the patches,
 //  and each column is cached.
 //
-void R_GenerateComposite (int texnum) {
+void R_GenerateComposite(int texnum) {
     byte*		block;
     texture_t*		texture;
     texpatch_t*		patch;	
@@ -286,8 +290,6 @@ void R_GenerateLookup (int texnum) {
     int			i;
     short*		collump;
     unsigned short*	colofs;
-	
-    printf("Generating lookup #%d", texnum);
 
     texture = textures[texnum];
 
@@ -305,7 +307,6 @@ void R_GenerateLookup (int texnum) {
     patchcount = (byte *)alloca (texture->width);
     memset (patchcount, 0, texture->width);
     patch = texture->patches;
-    
     for (i=0, patch = texture->patches; i<texture->patchcount; i++, patch++) {
         realpatch = W_CacheLumpNum(patch->patch, PU_CACHE);
         
@@ -320,18 +321,12 @@ void R_GenerateLookup (int texnum) {
         if (x2 > texture->width)
             x2 = texture->width;
 
-        
-        printf("width %d", x2);
-
         for (; x<x2 ; x++) {
             patchcount[x]++;
             collump[x] = patch->patch;
             colofs[x] = LONG(realpatch->columnofs[x-x1])+3;
         }
-        printf("hasnt crashed 3");
     }
-	
-    printf("finished first loop");
 
     for (x=0 ; x<texture->width ; x++) {
         if (!patchcount[x]) {
@@ -353,8 +348,6 @@ void R_GenerateLookup (int texnum) {
             texturecompositesize[texnum] += texture->height;
         }
     }
-
-    printf("lookup generated");
 }
 
 //
@@ -449,14 +442,14 @@ void R_InitTextures (void) {
     }
 
     numtextures = numtextures1 + numtextures2;
-	
-    textures = Z_Malloc (numtextures*4, PU_STATIC, 0);
-    texturecolumnlump = Z_Malloc (numtextures*4, PU_STATIC, 0);
-    texturecolumnofs = Z_Malloc (numtextures*4, PU_STATIC, 0);
-    texturecomposite = Z_Malloc (numtextures*4, PU_STATIC, 0);
-    texturecompositesize = Z_Malloc (numtextures*4, PU_STATIC, 0);
-    texturewidthmask = Z_Malloc (numtextures*4, PU_STATIC, 0);
-    textureheight = Z_Malloc (numtextures*4, PU_STATIC, 0);
+
+    textures = Z_Malloc (numtextures*sizeof(*textures), PU_STATIC, 0);
+    texturecolumnlump = Z_Malloc (numtextures*sizeof(*texturecolumnlump), PU_STATIC, 0);
+    texturecolumnofs = Z_Malloc (numtextures*sizeof(*texturecolumnofs), PU_STATIC, 0);
+    texturecomposite = Z_Malloc (numtextures*sizeof(*texturecomposite), PU_STATIC, 0);
+    texturecompositesize = Z_Malloc (numtextures*sizeof(*texturecompositesize), PU_STATIC, 0);
+    texturewidthmask = Z_Malloc (numtextures*sizeof(*texturewidthmask), PU_STATIC, 0);
+    textureheight = Z_Malloc (numtextures*sizeof(*textureheight), PU_STATIC, 0);
 
     totalwidth = 0;
     
@@ -495,7 +488,7 @@ void R_InitTextures (void) {
             Z_Malloc (sizeof(texture_t)
                 + sizeof(texpatch_t)*(SHORT(mtexture->patchcount)-1),
                 PU_STATIC, 0);
-        
+
         texture->width = SHORT(mtexture->width);
         texture->height = SHORT(mtexture->height);
         texture->patchcount = SHORT(mtexture->patchcount);
@@ -508,14 +501,15 @@ void R_InitTextures (void) {
             patch->originx = SHORT(mpatch->originx);
             patch->originy = SHORT(mpatch->originy);
             patch->patch = patchlookup[SHORT(mpatch->patch)];
+
             if (patch->patch == -1){
                 I_Error ("R_InitTextures: Missing patch in texture %s", texture->name);
             }
         }
 
-        texturecolumnlump[i] = Z_Malloc (texture->width*2, PU_STATIC,0);
-        texturecolumnofs[i] = Z_Malloc (texture->width*2, PU_STATIC,0);
-
+        texturecolumnlump[i] = Z_Malloc(texture->width*2, PU_STATIC,0);
+        texturecolumnofs[i] = Z_Malloc(texture->width*2, PU_STATIC,0);
+        
         j = 1;
         while (j*2 <= texture->width)
             j<<=1;
@@ -533,18 +527,12 @@ void R_InitTextures (void) {
     // Precalculate whatever possible.	
     for (i=0 ; i<numtextures ; i++)
 	    R_GenerateLookup (i);
-    
-    printf("done lookup gen");
 
     // Create translation table for global animation.
     texturetranslation = Z_Malloc ((numtextures+1)*4, PU_STATIC, 0);
-    
-    printf("done translation");
 
     for (i=0 ; i<numtextures ; i++)
 	    texturetranslation[i] = i;
-
-    printf("done texture init :)");
 }
 
 
@@ -596,14 +584,12 @@ void R_InitSpriteLumps (void) {
     }
 }
 
-
-
 //
 // R_InitColormaps
 //
 void R_InitColormaps(void) {
     int	lump, length;
-    
+
     // Load in the light tables, 
     //  256 byte align tables.
     lump = W_GetNumForName("COLORMAP"); 
@@ -613,8 +599,6 @@ void R_InitColormaps(void) {
     W_ReadLump (lump,colormaps); 
 }
 
-
-
 //
 // R_InitData
 // Locates all the lumps
@@ -623,7 +607,6 @@ void R_InitColormaps(void) {
 //
 void R_InitData(void) {
     R_InitTextures();
-    printf("FINISH INIT TEXTURES");
     printf("\nInitTextures");
     R_InitFlats();
     printf("\nInitFlats");
