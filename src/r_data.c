@@ -593,10 +593,10 @@ void R_InitColormaps(void) {
     // Load in the light tables, 
     //  256 byte align tables.
     lump = W_GetNumForName("COLORMAP"); 
-    length = W_LumpLength (lump) + 255; 
+    length = W_LumpLength (lump) + 255;
     colormaps = Z_Malloc (length, PU_STATIC, 0); 
-    colormaps = (byte *)( ((int)colormaps + 255)&~0xff); 
-    W_ReadLump (lump,colormaps); 
+    colormaps = (byte*)(((uintptr_t)colormaps + 255)&~0xff);
+    W_ReadLump(lump, colormaps); 
 }
 
 //

@@ -760,8 +760,6 @@ extern int	screenblocks;
 void R_Init(void) {   
     
     R_InitData();
-    printf("FINISHED R_INITDATA");
-
     printf("\nR_InitData");
     R_InitPointToAngle();
     printf("\nR_InitPointToAngle");
