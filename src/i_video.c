@@ -60,22 +60,22 @@ rcsid[] = "$Id: i_x.c,v 1.6 1997/02/03 22:45:10 b1 Exp $";
 #include "SDL3/SDL.h"
 
 void I_InitGraphics (void) {
-	printf("Initialized graphics");
+	printf("Initialized graphics\n");
 }
 
 void I_ShutdownGraphics(void) {
-	printf("Shutting down graphics");
+	printf("Shutting down graphics\n");
 }
 
 void I_SetPalette (byte* palette) {
-	printf("Setting Palette");
+	printf("Setting Palette\n");
 }
 
 void I_UpdateNoBlit (void) {
-	printf("Update No Blit");
+	printf("Update No Blit\n");
 }
 void I_FinishUpdate (void) {
-	printf("Finish Update");
+	printf("Finish Update\n");
 }
 
 void I_WaitVBL(int count) {
@@ -91,23 +91,23 @@ void I_WaitVBL(int count) {
 }
 
 void I_ReadScreen (byte* scr) {
-	printf("Read Screen");
+	printf("Read Screen\n");
 }
 
 void I_BeginRead (void) {
-	printf("Begin Read");
+	printf("Begin Read\n");
 }
 
 void I_EndRead (void) {
-	printf("End Read");
+	printf("End Read\n");
 }
 
 void I_StartFrame (void) {
-	printf("Start Frame");
+	printf("Start Frame\n");
 }
 
 void I_StartTic(void) {
-	printf("Start Tic");
+	printf("Start Tic\n");
 }
 
 // #define POINTER_WARP_COUNTDOWN	1

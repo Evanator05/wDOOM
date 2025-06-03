@@ -81,7 +81,7 @@ typedef struct
 typedef struct
 {
     char		name[8];
-    int		masked;	
+    boolean		masked;	
     short		width;
     short		height;
     int		columndirectory;	// OBSOLETE
@@ -353,8 +353,7 @@ void R_GenerateLookup (int texnum) {
 //
 // R_GetColumn
 //
-byte*
-R_GetColumn(int tex, int col) {
+byte* R_GetColumn(int tex, int col) {
     int		lump;
     int		ofs;
 	

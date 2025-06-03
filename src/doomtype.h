@@ -33,7 +33,7 @@ typedef bool boolean;
 #else
 //typedef enum {false, true} boolean;
 #include <stdbool.h>
-typedef bool boolean;
+typedef int boolean;
 #endif
 typedef unsigned char byte;
 #endif

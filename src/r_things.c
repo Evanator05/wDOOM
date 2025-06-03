@@ -296,16 +296,14 @@ int		newvissprite;
 // R_InitSprites
 // Called at program start.
 //
-void R_InitSprites (char** namelist)
-{
-    int		i;
+void R_InitSprites(char** namelist) {
+    int i;
 	
-    for (i=0 ; i<SCREENWIDTH ; i++)
-    {
-	negonearray[i] = -1;
+    for (i=0 ; i<SCREENWIDTH ; i++) {
+	    negonearray[i] = -1;
     }
 	
-    R_InitSpriteDefs (namelist);
+    R_InitSpriteDefs(namelist);
 }
 
 
