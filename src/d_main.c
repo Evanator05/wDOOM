@@ -344,7 +344,6 @@ void D_DoomLoop(void) {
     I_InitGraphics ();
 
     while (true) {
-		printf("looping");
 		// frame syncronous IO operations
 		I_StartFrame();                
 		
@@ -492,8 +491,6 @@ void D_AdvanceDemo (void)
 	break;
     }
 }
-
-
 
 //
 // D_StartTitle

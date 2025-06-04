@@ -1490,11 +1490,10 @@ G_InitNew
 
 void G_ReadDemoTiccmd (ticcmd_t* cmd) 
 { 
-    if (*demo_p == DEMOMARKER) 
-    {
-	// end of demo data stream 
-	G_CheckDemoStatus (); 
-	return; 
+    if (*demo_p == DEMOMARKER)  {
+        // end of demo data stream 
+        G_CheckDemoStatus (); 
+        return; 
     } 
     cmd->forwardmove = ((signed char)*demo_p++); 
     cmd->sidemove = ((signed char)*demo_p++); 
@@ -1506,17 +1505,16 @@ void G_ReadDemoTiccmd (ticcmd_t* cmd)
 void G_WriteDemoTiccmd (ticcmd_t* cmd) 
 { 
     if (gamekeydown['q'])           // press q to end demo recording 
-	G_CheckDemoStatus (); 
+	    G_CheckDemoStatus (); 
     *demo_p++ = cmd->forwardmove; 
     *demo_p++ = cmd->sidemove; 
     *demo_p++ = (cmd->angleturn+128)>>8; 
     *demo_p++ = cmd->buttons; 
     demo_p -= 4; 
-    if (demo_p > demoend - 16)
-    {
-	// no more space 
-	G_CheckDemoStatus (); 
-	return; 
+    if (demo_p > demoend - 16) {
+        // no more space 
+        G_CheckDemoStatus (); 
+        return; 
     } 
 	
     G_ReadDemoTiccmd (cmd);         // make SURE it is exactly the same 
@@ -1527,10 +1525,9 @@ void G_WriteDemoTiccmd (ticcmd_t* cmd)
 //
 // G_RecordDemo 
 // 
-void G_RecordDemo (char* name) 
-{ 
-    int             i; 
-    int				maxsize;
+void G_RecordDemo(char* name) { 
+    int i; 
+    int	maxsize;
 	
     usergame = false; 
     strcpy (demoname, name); 
@@ -1538,7 +1535,7 @@ void G_RecordDemo (char* name)
     maxsize = 0x20000;
     i = M_CheckParm ("-maxdemo");
     if (i && i<myargc-1)
-	maxsize = atoi(myargv[i+1])*1024;
+	    maxsize = atoi(myargv[i+1])*1024;
     demobuffer = Z_Malloc (maxsize,PU_STATIC,NULL); 
     demoend = demobuffer + maxsize;
 	
@@ -1546,9 +1543,8 @@ void G_RecordDemo (char* name)
 } 
  
  
-void G_BeginRecording (void) 
-{ 
-    int             i; 
+void G_BeginRecording(void) {
+    int i; 
 		
     demo_p = demobuffer;
 	
@@ -1573,14 +1569,12 @@ void G_BeginRecording (void)
 
 char*	defdemoname; 
  
-void G_DeferedPlayDemo (char* name) 
-{ 
+void G_DeferedPlayDemo (char* name) { 
     defdemoname = name; 
     gameaction = ga_playdemo; 
 } 
  
-void G_DoPlayDemo (void) 
-{ 
+void G_DoPlayDemo (void) { 
     skill_t skill; 
     int             i, episode, map; 
 	 
@@ -1603,11 +1597,10 @@ void G_DoPlayDemo (void)
     consoleplayer = *demo_p++;
 	
     for (i=0 ; i<MAXPLAYERS ; i++) 
-	playeringame[i] = *demo_p++; 
-    if (playeringame[1]) 
-    { 
-	netgame = true; 
-	netdemo = true; 
+	    playeringame[i] = *demo_p++; 
+    if (playeringame[1]) { 
+        netgame = true; 
+        netdemo = true; 
     }
 
     // don't spend a lot of time in loadlevel 
@@ -1622,8 +1615,7 @@ void G_DoPlayDemo (void)
 //
 // G_TimeDemo 
 //
-void G_TimeDemo (char* name) 
-{ 	 
+void G_TimeDemo(char* name) { 
     nodrawers = M_CheckParm ("-nodraw"); 
     noblit = M_CheckParm ("-noblit"); 
     timingdemo = true; 
@@ -1644,43 +1636,39 @@ void G_TimeDemo (char* name)
 =================== 
 */ 
  
-boolean G_CheckDemoStatus (void) 
-{ 
-    int             endtime; 
+boolean G_CheckDemoStatus(void) { 
+    int endtime; 
 	 
-    if (timingdemo) 
-    { 
-	endtime = I_GetTime (); 
-	I_Error ("timed %i gametics in %i realtics",gametic 
-		 , endtime-starttime); 
+    if (timingdemo) { 
+        endtime = I_GetTime(); 
+        I_Error("timed %i gametics in %i realtics",gametic 
+            , endtime-starttime); 
     } 
 	 
-    if (demoplayback) 
-    { 
-	if (singledemo) 
-	    I_Quit (); 
-			 
-	Z_ChangeTag (demobuffer, PU_CACHE); 
-	demoplayback = false; 
-	netdemo = false;
-	netgame = false;
-	deathmatch = false;
-	playeringame[1] = playeringame[2] = playeringame[3] = 0;
-	respawnparm = false;
-	fastparm = false;
-	nomonsters = false;
-	consoleplayer = 0;
-	D_AdvanceDemo (); 
-	return true; 
+    if (demoplayback) { 
+        if (singledemo) 
+            I_Quit(); 
+        
+        Z_ChangeTag (demobuffer, PU_CACHE); 
+        demoplayback = false; 
+        netdemo = false;
+        netgame = false;
+        deathmatch = false;
+        playeringame[1] = playeringame[2] = playeringame[3] = 0;
+        respawnparm = false;
+        fastparm = false;
+        nomonsters = false;
+        consoleplayer = 0;
+        D_AdvanceDemo(); 
+        return true; 
     } 
  
-    if (demorecording) 
-    { 
-	*demo_p++ = DEMOMARKER; 
-	M_WriteFile (demoname, demobuffer, demo_p - demobuffer); 
-	Z_Free (demobuffer); 
-	demorecording = false; 
-	I_Error ("Demo %s recorded",demoname); 
+    if (demorecording) { 
+        *demo_p++ = DEMOMARKER; 
+        M_WriteFile(demoname, demobuffer, demo_p - demobuffer); 
+        Z_Free(demobuffer); 
+        demorecording = false; 
+        I_Error("Demo %s recorded",demoname); 
     } 
 	 
     return false; 
