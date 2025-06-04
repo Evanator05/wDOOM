@@ -59,55 +59,109 @@ rcsid[] = "$Id: i_x.c,v 1.6 1997/02/03 22:45:10 b1 Exp $";
 
 #include "SDL3/SDL.h"
 
-void I_InitGraphics (void) {
-	printf("Initialized graphics\n");
+#define DISPLAYSCALE 5
+
+SDL_Window *window;
+SDL_Renderer *renderer;
+SDL_Texture *texture;
+
+SDL_Color palette[256];
+
+byte* mainScreen;
+
+void I_InitGraphics(void) {
+	
+	if (!SDL_Init(SDL_INIT_VIDEO))
+		I_Error("SDL_Init failed: %s", SDL_GetError());
+	
+	window = SDL_CreateWindow("wDOOM", SCREENWIDTH*DISPLAYSCALE, SCREENHEIGHT*DISPLAYSCALE, 0);
+
+	if (!window)
+		I_Error("Window creation failed: %s", SDL_GetError());
+
+	renderer = SDL_CreateRenderer(window, NULL);
+
+	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SCREENWIDTH, SCREENHEIGHT);
+	SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
+
+	mainScreen = screens[0]; // bind screens[0] to the main screen
 }
 
 void I_ShutdownGraphics(void) {
-	printf("Shutting down graphics\n");
+	SDL_DestroyTexture(texture);
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
+	SDL_Quit();
 }
 
-void I_SetPalette (byte* palette) {
-	printf("Setting Palette\n");
+void I_SetPalette (byte* doomPalette) {
+	for (int i = 0; i < 256; i++) {
+		palette[i].r = gammatable[usegamma][doomPalette[i*3+0]];
+		palette[i].g = gammatable[usegamma][doomPalette[i*3+1]];
+		palette[i].b = gammatable[usegamma][doomPalette[i*3+2]];
+		palette[i].a = 255;
+	}
 }
 
 void I_UpdateNoBlit (void) {
-	printf("Update No Blit\n");
+	//printf("Update No Blit\n");
 }
 void I_FinishUpdate (void) {
-	printf("Finish Update\n");
+	void* pixels;
+	int pitch;
+	SDL_LockTexture(texture, NULL, &pixels, &pitch);
+
+	uint32_t *dest = (uint32_t *)pixels;
+
+	for (int y = 0; y < SCREENHEIGHT; y++) {
+		for (int x = 0; x < SCREENWIDTH; x++) {
+			//screens[0][y*SCREENWIDTH + x] = 0x1F;  // some palette index ≠ 0
+
+			byte colorIndex = mainScreen[y*SCREENWIDTH+x];
+
+			SDL_Color c = palette[colorIndex];
+
+			//printf("%d %d %d\n", c.r, c.g, c.b);
+
+			dest[y*(pitch/4)+x] = (c.r<<24) | (c.g<<16) | (c.b<<8) | 0xFF;
+		}
+	}
+
+	SDL_UnlockTexture(texture);
+
+	SDL_RenderTexture(renderer, texture, NULL, NULL);
+	SDL_RenderPresent(renderer);
 }
 
 void I_WaitVBL(int count) {
-	#ifdef SGI
-		sginap(1);                                           
-	#else
-	#ifdef SUN
-		sleep(0);
-	#else
-		usleep (count * (1000000/70) );                                
-	#endif
-	#endif
+	printf("hello %d", count);
+	SDL_Delay(1000*count/35);
 }
 
 void I_ReadScreen (byte* scr) {
-	printf("Read Screen\n");
+	//printf("Read Screen\n");
 }
 
 void I_BeginRead (void) {
-	printf("Begin Read\n");
+	//printf("Begin Read\n");
 }
 
 void I_EndRead (void) {
-	printf("End Read\n");
+	//printf("End Read\n");
 }
 
 void I_StartFrame (void) {
-	printf("Start Frame\n");
+	//printf("Start Frame\n");
+	SDL_Event e;
+	while (SDL_PollEvent(&e)) {
+		if (e.type == SDL_EVENT_QUIT) {
+			I_Quit();
+		}
+	}
 }
 
 void I_StartTic(void) {
-	printf("Start Tic\n");
+	//printf("Start Tic\n");
 }
 
 // #define POINTER_WARP_COUNTDOWN	1

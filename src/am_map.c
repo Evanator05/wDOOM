@@ -974,11 +974,7 @@ AM_clipMline
 //
 // Classic Bresenham w/ whatever optimizations needed for speed
 //
-void
-AM_drawFline
-( fline_t*	fl,
-  int		color )
-{
+void AM_drawFline (fline_t* fl, int color) {
     register int x;
     register int y;
     register int dx;
